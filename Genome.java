@@ -1,7 +1,7 @@
 // Other sources I used, oracle documentation.
 
 import java.util.*;
-public class Genome{
+public class Genome implements Comparable<Genome>{
    final char[] testChar = {'A', 'B', 'C', 'D', 'E', 'F', 
         'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q' 
       , 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\''};//length is 29
@@ -17,11 +17,13 @@ public class Genome{
          }
       myMutRate = mutationRate;
       myGene = "A";
+      fitness();
    }
    
    Genome (Genome gene) {
       myGene = gene.myGene;
       myMutRate = gene.myMutRate;
+      myFitness = gene.myFitness;
    }
    
    void mutate(){
@@ -91,7 +93,29 @@ public class Genome{
       fitness();     
    }
    
+   
    public Integer fitness() {
+      int n = myGene.length();
+      int m = target.length();
+      
+      int l = Math.max(n,m);
+      int min = Math.min(n,m);
+      int f = Math.abs(m - n);
+      f = f * 2;
+      
+      int i = 0;
+      for (i = 0; i < min; i ++) {
+         if(myGene.charAt(i) != target.charAt(i)) {
+            f++;
+         }
+      }
+      
+      myFitness = f;
+      return f;
+      
+   }
+   
+   public Integer levenSshteinFitness() {
       int n = myGene.length();
       int m = target.length();
       int[][] D = new int[n+1][m+1];
@@ -120,6 +144,10 @@ public class Genome{
       
       
       
+   }
+   
+   public int compareTo(final Genome theGenome) {
+      return (myFitness - theGenome.myFitness);
    }
       
    public String toString() {
